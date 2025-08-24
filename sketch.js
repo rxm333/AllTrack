@@ -50,9 +50,19 @@ function preload(){
 }
 
 function setup() {
-  createCanvas(640, 480);
+  // Make canvas responsive to screen size
+  let canvasWidth = min(windowWidth, 640);
+  let canvasHeight = (canvasWidth * 480) / 640; // Maintain 4:3 aspect ratio
+  
+  // Ensure canvas fits within window height
+  if (canvasHeight > windowHeight * 0.9) {
+    canvasHeight = windowHeight * 0.9;
+    canvasWidth = (canvasHeight * 640) / 480;
+  }
+  
+  createCanvas(canvasWidth, canvasHeight);
   video = createCapture(VIDEO, { flipped: true });
-  video.size(640, 480);
+  video.size(canvasWidth, canvasHeight);
   video.hide();
 
   // Hands
@@ -205,4 +215,29 @@ function gotFaces(resultsFaces) {
 }
 function gotPoses(resultsPoses) {
   poses = resultsPoses;
+}
+
+// Handle window resize for mobile orientation changes
+function windowResized() {
+  let canvasWidth = min(windowWidth, 640);
+  let canvasHeight = (canvasWidth * 480) / 640;
+  
+  if (canvasHeight > windowHeight * 0.9) {
+    canvasHeight = windowHeight * 0.9;
+    canvasWidth = (canvasHeight * 640) / 480;
+  }
+  
+  resizeCanvas(canvasWidth, canvasHeight);
+  video.size(canvasWidth, canvasHeight);
+}
+
+// Optimize touch interactions for mobile
+function touchStarted() {
+  // Prevent default touch behavior on canvas
+  return false;
+}
+
+function touchMoved() {
+  // Prevent default touch behavior on canvas  
+  return false;
 }
